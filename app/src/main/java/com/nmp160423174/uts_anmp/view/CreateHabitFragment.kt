@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.nmp160423174.uts_anmp.R
 import com.nmp160423174.uts_anmp.databinding.FragmentCreateHabitBinding
@@ -45,6 +46,7 @@ class CreateHabitFragment : Fragment() {
 
         viewModel = ViewModelProvider(requireActivity()).get(ListViewModel::class.java)
 
+        viewModel.refresh()
         setupSpinner()
 
         binding.btnCreateHabit.setOnClickListener {
@@ -52,12 +54,14 @@ class CreateHabitFragment : Fragment() {
             val habitName = binding.habitName.text.toString()
             val description = binding.description.text.toString()
             val goal = binding.goal.text.toString().toInt()
-            val unit = binding.unit.text.toString().toInt()
+            val unit = binding.unit.text.toString()
 
             val selectedIcon = iconList[binding.comboIcon.selectedItemPosition]
 
             viewModel.addData(habitName, description, goal, unit, selectedIcon)
-            viewModel.save()
+
+            val action = CreateHabitFragmentDirections.actionHabitListFragment()
+            it.findNavController().navigate(action)
         }
     }
 

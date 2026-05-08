@@ -13,5 +13,4 @@ class LoginViewModel: ViewModel() {
             statusLoginLD.value = false
         }
     }
-
 }

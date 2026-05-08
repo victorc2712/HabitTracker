@@ -28,33 +28,25 @@ class HabitListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //view model instantiate
         viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
-        viewModel.refresh()
-        //viewModel.testSaveFile()
         adapter = HabitListAdapter(arrayListOf(), viewModel)
 
-        //recycler view instantiate
         binding.recViewHabit.layoutManager = LinearLayoutManager(context)
         binding.recViewHabit.adapter = adapter
+
         observeViewModel()
+
+        viewModel.refresh()
 
         binding.fabAdd.setOnClickListener {
             val action = HabitListFragmentDirections.actionCreateHabitFragment()
             it.findNavController().navigate(action)
         }
-//
-//        //swipe refresh handle
-//        binding.swipeRefresh.setOnRefreshListener {
-//            viewModel.refresh()
-//        }
     }
 
     fun observeViewModel() {
-        //Observe studentsLD
         viewModel.HabitLD.observe(viewLifecycleOwner, Observer {
             adapter.updateHabitList(it)
-
         })
     }
 

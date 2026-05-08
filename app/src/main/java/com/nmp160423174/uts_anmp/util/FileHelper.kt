@@ -31,6 +31,12 @@ class FileHelper(val context: Context) {
     fun readFromFile():String {
         return try {
             val file = getFile()
+
+            if (!file.exists()) {
+                writeToFile("[]")
+                return "[]"
+            }
+
             file.bufferedReader().useLines {
                 it.joinToString("\n")
             }

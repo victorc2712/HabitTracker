@@ -26,5 +26,10 @@
     <fragment
         android:id="@+id/createHabitFragment"
         android:name="com.nmp160423174.uts_anmp.view.CreateHabitFragment"
-        android:label="CreateHabitFragment" />
+        android:label="CreateHabitFragment" >
+        <action
+            android:id="@+id/actionHabitListFragment"
+            app:destination="@id/habitListFragment"
+            app:popUpTo="@id/habitListFragment" />
+    </fragment>
 </navigation>
