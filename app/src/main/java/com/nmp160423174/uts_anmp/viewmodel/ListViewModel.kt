@@ -7,11 +7,20 @@ import com.nmp160423174.uts_anmp.model.Habit
 class ListViewModel: ViewModel() {
     val HabitLD= MutableLiveData<ArrayList<Habit>>()
     fun refresh(){
-        HabitLD.value = arrayListOf(
-            Habit("rafa","Sidoarjo",9,6,0),
-            Habit("Victor","Mojo",9,0,0),
-            Habit("Vicidior","Malang",9,2,0),
-        )
+        if (HabitLD.value == null) {
+            HabitLD.value = arrayListOf(
+                Habit("rafa","Sidoarjo",9,6,0),
+                Habit("Victor","Mojo",9,0,0),
+                Habit("Vicidior","Malang",9,2,0),
+            )
+        }
+    }
 
+    fun addData(habitName:String, description:String, goal:Int, unit:Int, icon:Int) {
+        val currentList = HabitLD.value
+
+        currentList.add(Habit(habitName, description, goal,unit,icon))
+
+        HabitLD.value = currentList
     }
 }

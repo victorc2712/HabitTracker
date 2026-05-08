@@ -13,10 +13,10 @@ import com.nmp160423174.uts_anmp.databinding.FragmentHabitListBinding
 import com.nmp160423174.uts_anmp.viewmodel.ListViewModel
 
 class HabitListFragment : Fragment() {
-
     private lateinit var binding: FragmentHabitListBinding
     private val adapter = HabitListAdapter(arrayListOf())
     private lateinit var viewModel: ListViewModel
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
