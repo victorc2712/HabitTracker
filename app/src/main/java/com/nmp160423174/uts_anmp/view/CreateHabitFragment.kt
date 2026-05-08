@@ -17,11 +17,18 @@ class CreateHabitFragment : Fragment() {
     private lateinit var binding: FragmentCreateHabitBinding
     private lateinit var viewModel: ListViewModel
 
-    private val iconList = arrayOf(
+    private val iconNameList = arrayOf(
         "Fitness",
         "Book",
         "Study",
         "Water"
+    )
+
+    private val iconList = arrayOf(
+        R.drawable.baseline_fitness_center_24,
+        R.drawable.baseline_menu_book_24,
+        R.drawable.baseline_school_24,
+        R.drawable.baseline_water_drop_24
     )
 
     override fun onCreateView(
@@ -47,14 +54,15 @@ class CreateHabitFragment : Fragment() {
             val goal = binding.goal.text.toString().toInt()
             val unit = binding.unit.text.toString().toInt()
 
-            val selectedIconPosition = binding.comboIcon.selectedItemPosition
+            val selectedIcon = iconList[binding.comboIcon.selectedItemPosition]
 
-            viewModel.addData(habitName, description, goal, unit, selectedIconPosition)
+            viewModel.addData(habitName, description, goal, unit, selectedIcon)
+            viewModel.save()
         }
     }
 
     private fun setupSpinner() {
-        val adapter = ArrayAdapter(requireContext(),android.R.layout.simple_spinner_item, iconList)
+        val adapter = ArrayAdapter(requireContext(),android.R.layout.simple_spinner_item, iconNameList)
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 

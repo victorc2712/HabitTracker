@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.nmp160423174.uts_anmp.R
 import com.nmp160423174.uts_anmp.databinding.FragmentHabitListBinding
@@ -14,8 +15,8 @@ import com.nmp160423174.uts_anmp.viewmodel.ListViewModel
 
 class HabitListFragment : Fragment() {
     private lateinit var binding: FragmentHabitListBinding
-    private val adapter = HabitListAdapter(arrayListOf())
     private lateinit var viewModel: ListViewModel
+    private lateinit var adapter : HabitListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,11 +32,17 @@ class HabitListFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
         viewModel.refresh()
         //viewModel.testSaveFile()
+        adapter = HabitListAdapter(arrayListOf(), viewModel)
 
         //recycler view instantiate
         binding.recViewHabit.layoutManager = LinearLayoutManager(context)
         binding.recViewHabit.adapter = adapter
         observeViewModel()
+
+        binding.fabAdd.setOnClickListener {
+            val action = HabitListFragmentDirections.actionCreateHabitFragment()
+            it.findNavController().navigate(action)
+        }
 //
 //        //swipe refresh handle
 //        binding.swipeRefresh.setOnRefreshListener {
@@ -49,8 +56,6 @@ class HabitListFragment : Fragment() {
             adapter.updateHabitList(it)
 
         })
-        //observe ErrorLD
-
     }
 
 }

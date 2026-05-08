@@ -9,7 +9,11 @@
         android:id="@+id/habitListFragment"
         android:name="com.nmp160423174.uts_anmp.view.HabitListFragment"
         android:label="fragment_habit_list"
-        tools:layout="@layout/fragment_habit_list" />
+        tools:layout="@layout/fragment_habit_list" >
+        <action
+            android:id="@+id/actionCreateHabitFragment"
+            app:destination="@id/createHabitFragment" />
+    </fragment>
     <fragment
         android:id="@+id/loginFragment2"
         android:name="com.nmp160423174.uts_anmp.view.LoginFragment"
@@ -19,4 +23,8 @@
             android:id="@+id/actionHabitListFragment"
             app:destination="@id/habitListFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/createHabitFragment"
+        android:name="com.nmp160423174.uts_anmp.view.CreateHabitFragment"
+        android:label="CreateHabitFragment" />
 </navigation>
