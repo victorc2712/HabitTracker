@@ -7,17 +7,17 @@ import androidx.room.PrimaryKey
 @Entity
 data class Habit(
     @ColumnInfo(name="name")
-    val name: String,
+    var name: String,
     @ColumnInfo(name="description")
-    val description: String,
+    var description: String,
     @ColumnInfo(name="goal")
-    val goal: Int,
+    var goal: Int,
     @ColumnInfo(name="unit")
-    val unit: String,
+    var unit: String,
     @ColumnInfo(name="progress")
     var progress: Int = 0,
     @ColumnInfo(name="iconResId")
-    val iconResId: Int
+    var iconResId: Int
 ) {
     @PrimaryKey(autoGenerate = true)
     var uuid: Int = 0

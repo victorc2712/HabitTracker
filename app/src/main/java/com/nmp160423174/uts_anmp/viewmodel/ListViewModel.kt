@@ -8,37 +8,32 @@ import androidx.lifecycle.ViewModel
 import com.nmp160423174.uts_anmp.model.Habit
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.nmp160423174.uts_anmp.util.FileHelper
+import com.nmp160423174.uts_anmp.model.HabitDatabase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
 
-class ListViewModel(application: Application): AndroidViewModel(application) {
-    val HabitLD = MutableLiveData<ArrayList<Habit>>(arrayListOf())
+class ListViewModel(application: Application): AndroidViewModel(application), CoroutineScope {
+    val habitLD = MutableLiveData<List<Habit>>(arrayListOf())
+    val todoLoadErrorLD = MutableLiveData<Boolean>()
+    val loadingLD = MutableLiveData<Boolean>()
+    private var job = Job()
+    override val coroutineContext: CoroutineContext
+        get() = job + Dispatchers.IO
+
 
     fun refresh() {
+        loadingLD.value = true
+        todoLoadErrorLD.value = false
+        launch {
+            val db = HabitDatabase.BuildDatabase(
+                getApplication()
+            )
 
-        val fileHelper = FileHelper(getApplication())
-        val resultFromFile = fileHelper.readFromFile()
-        val sType = object : TypeToken<ArrayList<Habit>>() {}.type
-
-        val hasilListHabit: ArrayList<Habit> = Gson().fromJson(resultFromFile, sType)
-
-        HabitLD.value = hasilListHabit
-    }
-
-    fun save() {
-        val currentList = HabitLD.value
-        val fileHelper = FileHelper(getApplication())
-        val jsonString = Gson().toJson(currentList)
-
-        fileHelper.writeToFile(jsonString)
-    }
-
-    fun addData( habitName: String,description: String, goal: Int, unit: String, icon: Int) {
-        val currentList = HabitLD.value
-
-        currentList.add(Habit(habitName, description, goal, unit,0, icon))
-
-        HabitLD.value = currentList
-        Log.d("ADD_DATA", currentList.toString())
-        save()
+            habitLD.postValue(db.habitDao().SelectAllHabit())
+            loadingLD.postValue(false)
+        }
     }
 }

@@ -11,11 +11,13 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.nmp160423174.uts_anmp.R
 import com.nmp160423174.uts_anmp.databinding.FragmentHabitListBinding
+import com.nmp160423174.uts_anmp.viewmodel.DetailHabitViewModel
 import com.nmp160423174.uts_anmp.viewmodel.ListViewModel
 
 class HabitListFragment : Fragment() {
     private lateinit var binding: FragmentHabitListBinding
     private lateinit var viewModel: ListViewModel
+    private lateinit var detailViewModel: DetailHabitViewModel
     private lateinit var adapter : HabitListAdapter
 
     override fun onCreateView(
@@ -29,7 +31,8 @@ class HabitListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
-        adapter = HabitListAdapter(arrayListOf(), viewModel)
+        detailViewModel = ViewModelProvider(this).get(DetailHabitViewModel::class.java)
+        adapter = HabitListAdapter(arrayListOf(), detailViewModel)
 
         binding.recViewHabit.layoutManager = LinearLayoutManager(context)
         binding.recViewHabit.adapter = adapter
@@ -45,8 +48,14 @@ class HabitListFragment : Fragment() {
     }
 
     fun observeViewModel() {
-        viewModel.HabitLD.observe(viewLifecycleOwner, Observer {
+        viewModel.habitLD.observe(viewLifecycleOwner, Observer {
             adapter.updateHabitList(it)
+            if(it.isEmpty()) {
+                binding.recViewHabit.visibility = View.GONE
+                //Tambahin error handler kalo mau
+            } else {
+                binding.recViewHabit.visibility = View.VISIBLE
+            }
         })
     }
 
