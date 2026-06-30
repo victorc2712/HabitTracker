@@ -6,34 +6,31 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.RadioButton
 import android.widget.Toast
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
+import androidx.navigation.Navigation
 import com.nmp160423174.uts_anmp.R
 import com.nmp160423174.uts_anmp.databinding.FragmentCreateHabitBinding
-import com.nmp160423174.uts_anmp.model.Habit
 import com.nmp160423174.uts_anmp.viewmodel.DetailHabitViewModel
-import com.nmp160423174.uts_anmp.viewmodel.ListViewModel
 
-class CreateHabitFragment : Fragment() {
-
-    private lateinit var binding: FragmentCreateHabitBinding
-    private lateinit var viewModel: DetailHabitViewModel
-
+class EditHabitFragment : Fragment() {
     private val iconNameList = arrayOf(
         "Fitness",
         "Book",
         "Study",
         "Water"
     )
-
     private val iconList = arrayOf(
         R.drawable.baseline_fitness_center_24,
         R.drawable.baseline_menu_book_24,
         R.drawable.baseline_school_24,
         R.drawable.baseline_water_drop_24
     )
+
+    private lateinit var binding: FragmentCreateHabitBinding
+    private lateinit var viewModel: DetailHabitViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,25 +43,35 @@ class CreateHabitFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(requireActivity()).get(DetailHabitViewModel::class.java)
-
+        viewModel = ViewModelProvider(this).get(DetailHabitViewModel::class.java)
         setupSpinner()
 
+        binding.txtHeader.text = "Habit Data"
+        binding.btnCreateHabit.text = "Submit"
+
+        val uuid = EditHabitFragmentArgs.fromBundle(requireArguments()).uuid
+        viewModel.fetch(uuid)
+
         binding.btnCreateHabit.setOnClickListener {
-            val habitName = binding.habitName.text.toString()
-            val description = binding.description.text.toString()
-            val goal = binding.goal.text.toString().toInt()
-            val unit = binding.unit.text.toString()
             val selectedIcon = iconList[binding.comboIcon.selectedItemPosition]
-
-            var habit = Habit (habitName, description, goal, unit, 0, selectedIcon)
-            var list = listOf(habit)
-            viewModel.AddHabit(list)
-            Toast.makeText(view.context, "Data Added", Toast.LENGTH_LONG).show()
-
-            //val action = CreateHabitFragmentDirections.actionHabitListFragment()
-            it.findNavController().popBackStack()
+            viewModel.Update(
+                binding.habitName.text.toString(),
+                binding.description.text.toString(),
+                binding.goal.text.toString().toInt(),
+                binding.unit.text.toString(),
+                selectedIcon,
+                uuid)
+            Toast.makeText(view.context, "Todo updated", Toast.LENGTH_SHORT).show()
+            Navigation.findNavController(it).popBackStack()
         }
+
+        observeViewModel()
+    }
+
+    fun observeViewModel() {
+        viewModel.habitLD.observe(viewLifecycleOwner, Observer {
+            binding.habit = it
+        })
     }
 
     private fun setupSpinner() {
