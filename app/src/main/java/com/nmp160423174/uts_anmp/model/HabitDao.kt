@@ -13,13 +13,16 @@ interface HabitDao {
     fun InsertAll(vararg habit: Habit)
 
     @Query("SELECT * FROM habit")
-    fun SelectAllTodo():List<Habit>
+    fun SelectAllHabit():List<Habit>
 
     @Query("SELECT * FROM habit WHERE uuid= :id")
-    fun SelectTodo(id:Int): Habit
+    fun SelectHabit(id:Int): Habit
 
     @Query("UPDATE habit SET name=:name, description=:description, goal=:goal, unit=:unit, iconResId=:iconResId WHERE uuid = :uuid")
     fun update(name:String, description:String, goal:Int, unit:String, iconResId:Int, uuid:Int)
+
+    @Query("UPDATE habit SET progress=:progress WHERE uuid = :uuid")
+    fun updateProgress(progress:Int, uuid:Int)
 
     @Update
     fun updateTodo(habit: Habit)
